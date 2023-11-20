@@ -2,6 +2,7 @@
 
 import ApiAlert from "@/components/app_components/Api-alert";
 import Heading from "@/components/app_components/Heading";
+import ImageUpload from "@/components/app_components/Image-Upload";
 import AlertModal from "@/components/app_components/modals/AlertModal";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -10,7 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { toast } from "@/components/ui/use-toast";
 import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Store } from "@prisma/client";
+import { Billboard, Store } from "@prisma/client";
 import axios from "axios";
 import { Flashlight, TrashIcon } from "lucide-react";
 import { useParams } from "next/navigation";
@@ -19,19 +20,19 @@ import { FunctionComponent, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from 'zod';
 
-interface SettingsFormProps {
-    initialData: Store,
+interface BillboardFormProps {
+    initialData: Billboard | null,
 }
 
 
-
 const formSchema = z.object({
-    name: z.string().min(1)
+    label: z.string().min(1),
+    imageURL: z.string()
 });
 
-type settingsFormSchemaType = z.infer<typeof formSchema>
+type BillboardFormSchemaType = z.infer<typeof formSchema>
  
-const SettingsForm: FunctionComponent<SettingsFormProps> = ({initialData}) => {
+const BillboardForm: FunctionComponent<BillboardFormProps> = ({initialData}) => {
 
     const [open, setOpen] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false);
@@ -40,17 +41,26 @@ const SettingsForm: FunctionComponent<SettingsFormProps> = ({initialData}) => {
     const router = useRouter();
     const origin = useOrigin()
 
-    const form = useForm<settingsFormSchemaType>({
+    const title = initialData?'Edit Billboard':'Create Billboard';
+    const desc = initialData?'Edit a billboard':'Create a new billboard';
+    const toastMessage = initialData?'Billboard successfully updated': 'Billboard successfully created';
+    const action = initialData?'Save Changes': 'Create';
+
+    const form = useForm<BillboardFormSchemaType>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: initialData.name,
+        defaultValues: initialData || {
+            label: '',
+            imageURL: ''
         }
     })
 
-    const onSubmit = async(data: settingsFormSchemaType) =>{
+    const onSubmit = async(data: BillboardFormSchemaType) =>{
         try {
-            console.log(data)
-            await axios.patch(`/api/stores/${params.store_Id}/`, data);
+            if(initialData){
+                await axios.patch(`/api/${params.store_Id}/billboards/${params.billboardId}`, data);
+            }else{
+                await axios.post(`/api/${params.store_Id}/billboards`, data);
+            }
 
             toast({
                 title: 'Store Updated successfully',
@@ -58,6 +68,8 @@ const SettingsForm: FunctionComponent<SettingsFormProps> = ({initialData}) => {
             });
 
             router.refresh();
+
+            router.push(`/${params.store_Id}/billboards`);
 
         }catch(e){
             toast({
@@ -73,21 +85,22 @@ const SettingsForm: FunctionComponent<SettingsFormProps> = ({initialData}) => {
 
             setLoading(true);
 
-            axios.delete(`/api/stores/${params.store_Id}`);
+            axios.delete(`/api/${params.store_Id}/billboards/${params.billboardId}`);
 
-            router.push('/')
-            window.location.assign(`/`)
+            router.refresh();
+
+            router.push('/');
 
             toast({
-                title: 'Store Deleted',
-                description: 'Your Store has been deleted successfully',
-            })
+                title: toastMessage,
+                // description: 'Your Store has been deleted successfully',
+            });
 
         }catch(e){
             console.log(e)
             toast({
                 title: 'Ooops Somthing went wrong!!',
-                description: 'Make sure you have deleted all products',
+                description: 'Make sure you have no active categories!',
                 variant: 'destructive',
             });
 
@@ -106,31 +119,54 @@ const SettingsForm: FunctionComponent<SettingsFormProps> = ({initialData}) => {
             />
             <div className="flex items-center justify-between">
                 <Heading
-                title='Settings'
-                description='Manage Store preferences'
+                title={title}
+                description={desc}
                 />
-                <Button 
-                disabled={form.formState.isSubmitting}
-                className=""
-                variant={'destructive'}
-                size={'icon'}
-                onClick={()=>{setOpen(true)}}
-                >
-                    <TrashIcon className="h-4 w-4"/>
-                </Button>
+                {initialData && 
+                    <Button 
+                        disabled={form.formState.isSubmitting}
+                        className=""
+                        variant={'destructive'}
+                        size={'icon'}
+                        onClick={()=>{setOpen(true)}}
+                        >
+                            <TrashIcon className="h-4 w-4"/>
+                    </Button>
+                }
+                
             </div>
             <Separator/>
             <div>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
+                        <FormField
+                        name="imageURL"
+                        control={form.control}
+                        render={({field})=>(
+                            <FormItem>
+                                <FormLabel>
+                                    Billbaord Image
+                                </FormLabel>
+                                <FormControl>
+                                    <ImageUpload
+                                    disabled={form.formState.isSubmitting}
+                                    value={field.value ? [field.value] : []}
+                                    onChange={(url)=>field.onChange(url)}
+                                    onRemove={()=>field.onChange("")}
+                                    />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                        />
                         <div className="grid grid-cols-3 gap-8">
                             <FormField
-                            name="name"
+                            name="label"
                             control={form.control}
                             render={({field})=>(
                                 <FormItem>
                                     <FormLabel>
-                                        Store Name
+                                        Billboard label
                                     </FormLabel>
                                     <FormControl>
                                         <Input disabled={form.formState.isSubmitting} placeholder="Store name.." {...field}/>
@@ -144,20 +180,20 @@ const SettingsForm: FunctionComponent<SettingsFormProps> = ({initialData}) => {
                         className="ml-auto"
                         type="submit"
                         disabled={form.formState.isSubmitting}>
-                            Save Changes
+                            {action}
                         </Button>
                     </form>
                 </Form>
             </div>
             <Separator/>
-            <ApiAlert
+            {/* <ApiAlert
             title="NEXT_PUBLIC_API_URL"
             description={`${origin}/api/${params.store_Id}`}
             variant="public"
-            />
+            /> */}
         </>
         
     );
 }
  
-export default SettingsForm;
+export default BillboardForm;
