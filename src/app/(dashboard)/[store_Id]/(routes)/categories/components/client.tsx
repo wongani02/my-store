@@ -7,15 +7,15 @@ import { Billboard } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { FunctionComponent } from "react";
-import { BillboardColumn, columns } from "./columns";
+import { CategoriesColumn, columns } from "./columns";
 import { DataTable } from "@/components/app_components/data-table";
 import APIList from "@/components/app_components/api-list";
 
-interface BillBoardClientProps {
-    data: BillboardColumn[]
+interface CategoryClientProps {
+    data: CategoriesColumn[]
 }
  
-const BillBoardClient: FunctionComponent<BillBoardClientProps> = ({data}) => {
+const CategoryClient: FunctionComponent<CategoryClientProps> = ({data}) => {
 
     const router = useRouter();
     const params = useParams();
@@ -25,21 +25,21 @@ const BillBoardClient: FunctionComponent<BillBoardClientProps> = ({data}) => {
         <>
             <div className="flex items-center justify-between">
                 <Heading
-                title={`Billboards (${data.length})`}
-                description="Manage billboards for your store"
+                title={`Categories (${data.length})`}
+                description="Manage categories for your store"
                 />
-                <Button onClick={()=>router.push(`/${params.store_Id}/billboards/new`)}>
+                <Button onClick={()=>router.push(`/${params.store_Id}/categories/new`)}>
                     <Plus className="mr-2 h-4 w-4"/>
                     Add new
                 </Button>
             </div>
             <Separator/>
-            <DataTable searchKey="label" columns={columns} data={data}/>
-            <Heading title="API Routes" description="List of Billboard API routes"/>
+            <DataTable searchKey="name" columns={columns} data={data}/>
+            <Heading title="API Routes" description="List of Categories API routes"/>
             <Separator/>
-            <APIList entityIdName="billBoardID" entityName="billboards"/>
+            <APIList entityIdName="categoryId" entityName="categories"/>
         </>
      );
 }
  
-export default BillBoardClient;
+export default CategoryClient;

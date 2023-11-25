@@ -7,7 +7,7 @@ import prismadb from "@/lib/prismadb";
 
 export async function GET (
     req:Request,
-    { params }: { params: { billboardId: string } } 
+    { params }: { params: { categoryId: string } } 
     ){
     try {
 
@@ -17,22 +17,22 @@ export async function GET (
         //     return new NextResponse('Unauthenticated', { status:401 });
         // }
 
-        if (!params.billboardId){
-            return new NextResponse('Bad Request, Billboard Id is required', { status:400 });
+        if (!params.categoryId){
+            return new NextResponse('Bad Request, Category Id is required', { status:400 });
         }
 
-        const billboard = await prismadb.billboard.findUnique({
+        const category = await prismadb.category.findUnique({
             where: {
-                id: params.billboardId,
+                id: params.categoryId,
             }
         });
 
-        return NextResponse.json(billboard);
+        return NextResponse.json(category);
 
 
     } catch (error) {
 
-        console.log('[BILLBOARD-Single GET API ROUTE] - ', error);
+        console.log('[CATEGORY-Single GET API ROUTE] - ', error);
         
         return new NextResponse('Internal Error', {status: 500});
     }
@@ -41,12 +41,12 @@ export async function GET (
 
 export async function PATCH (
     req: Request, 
-    { params }: { params: { store_Id: string, billboardId:string } }){
+    { params }: { params: { store_Id: string, categoryId:string } }){
     try {
 
         const body = await req.json();
 
-        const { label, imageURL } = body;
+        const { name, billboardId } = body;
 
         const {userId} = auth();
 
@@ -54,11 +54,11 @@ export async function PATCH (
             return new NextResponse('Unauthorised', {status:401});
         }
 
-        if (!imageURL){
-            return new NextResponse('Bad request, Image URL is required', {status: 400});
+        if (!billboardId){
+            return new NextResponse('Bad request, billboardId is required', {status: 400});
         }
 
-        if (!label){
+        if (!name){
             return new NextResponse('Bad Request, Name is required', {status:400});
         }
 
@@ -66,8 +66,8 @@ export async function PATCH (
             return new NextResponse('Bad Request, Store Id is required', {status:400});
         }
 
-        if (!params.billboardId){
-            return new NextResponse('Bad Request, Store Id is required', {status:400});
+        if (!params.categoryId){
+            return new NextResponse('Bad Request, category Id is required', {status:400});
         }
 
         const storeByUser = await prismadb.store.findFirst({
@@ -81,20 +81,20 @@ export async function PATCH (
             return new NextResponse('UnAuthorised request', {status:403});
         }
 
-        const billboard = await prismadb.billboard.update({
+        const category = await prismadb.category.update({
             where:{
-                id: params.billboardId
+                id: params.categoryId
             },
             data: {
-                label,
-                imageURL,
+                name,
+                billboardId: billboardId,
             }
         });
 
-        return NextResponse.json(billboard);
+        return NextResponse.json(category);
 
     } catch (e){
-        console.log('[BILLBOARD PATCH API ROUTE] - ', e);
+        console.log('[CATEGORY PATCH API ROUTE] - ', e);
         
         return new NextResponse('Internal Error', {status: 500});
     }
@@ -103,7 +103,7 @@ export async function PATCH (
 
 export async function DELETE (
     req: Request, 
-    { params }: { params: { store_Id: string, billboardId:string } }
+    { params }: { params: { store_Id: string, categoryId:string } }
     ){
     try {
 
@@ -117,7 +117,7 @@ export async function DELETE (
             return new NextResponse('Store Id is required', {status: 400});
         }
 
-         if (!params.billboardId){
+         if (!params.categoryId){
             return new NextResponse('Bad Request, Store Id is required', {status:400});
         }
 
@@ -132,16 +132,16 @@ export async function DELETE (
             return new NextResponse('UnAuthorised request', {status:403});
         }
 
-        const billboard = await prismadb.billboard.deleteMany({
+        const category = await prismadb.category.deleteMany({
             where: { 
-                id: params.billboardId,
+                id: params.categoryId,
             },
         })
 
-        return NextResponse.json(billboard);
+        return NextResponse.json(category);
 
     } catch (e){
-        console.log('[BILLBOARD DELETE API ROUTE] - ', e);
+        console.log('[CATEGORY DELETE API ROUTE] - ', e);
         
         return new NextResponse('Internal Error', {status: 500});
     }

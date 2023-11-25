@@ -27,6 +27,11 @@ export function NavLinks({
             active: pathName === `/${params.store_Id}/billboards`,
         },
         {
+            href: `/${params.store_Id}/categories`,
+            label: 'Categories',
+            active: pathName === `/${params.store_Id}/categories`,
+        },
+        {
             href: `/${params.store_Id}/settings`,
             label: 'Settings',
             active: pathName === `/${params.store_Id}/settings`,

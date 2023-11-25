@@ -10,19 +10,19 @@ export async function POST (
 
         const body = await req.json();
 
-        const { label, imageURL } = body;
+        const { name, billboardId } = body;
 
         const {userId} = auth();
 
         if (!userId){
-            return new NextResponse('Unauthorised', {status:401});
+            return new NextResponse('Unauthenticated', {status:401});
         }
 
-        if (!imageURL){
-            return new NextResponse('Bad request, Image URL is required', {status: 400});
+        if (!billboardId){
+            return new NextResponse('Bad request, Billboard ID is required', {status: 400});
         }
 
-        if (!label){
+        if (!name){
             return new NextResponse('Bad Request, Name is required', {status:400});
         }
 
@@ -41,20 +41,20 @@ export async function POST (
             return new NextResponse('UnAuthorised request', {status:403});
         }
 
-        const billboard = await prismadb.billboard.create({
+        const category = await prismadb.category.create({
             data: {
-                label,
-                imageURL,
+                name,
+                billboardId:billboardId,
                 storeId: params.store_Id
             }
         });
 
-        return NextResponse.json(billboard);
+        return NextResponse.json(category);
 
 
     } catch (error) {
 
-        console.log('[BILLBOARD POST API ROUTE] - ', error);
+        console.log('[CATEGORY POST API ROUTE] - ', error);
         
         return new NextResponse('Internal Error', {status: 500});
     }
@@ -77,18 +77,18 @@ export async function GET (
             return new NextResponse('Bad Request, Store Id is required', { status:400 });
         }
 
-        const billboard = await prismadb.billboard.findMany({
+        const category = await prismadb.category.findMany({
             where: {
                 storeId: params.store_Id,
             }
         });
 
-        return NextResponse.json(billboard);
+        return NextResponse.json(category);
 
 
     } catch (error) {
 
-        console.log('[BILLBOARD GET API ROUTE] - ', error);
+        console.log('[CATEGORY GET API ROUTE] - ', error);
         
         return new NextResponse('Internal Error', {status: 500});
     }
