@@ -32,6 +32,11 @@ export function NavLinks({
             active: pathName === `/${params.store_Id}/categories`,
         },
         {
+            href: `/${params.store_Id}/sizes`,
+            label: 'Sizes',
+            active: pathName === `/${params.store_Id}/sizes`,
+        },
+        {
             href: `/${params.store_Id}/settings`,
             label: 'Settings',
             active: pathName === `/${params.store_Id}/settings`,
