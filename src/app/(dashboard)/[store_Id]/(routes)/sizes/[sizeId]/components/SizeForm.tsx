@@ -37,7 +37,7 @@ const SizeForm: FunctionComponent<SizeFormProps> = ({initialData}) => {
 
     const params = useParams();
     const router = useRouter();
-    const origin = useOrigin()
+    const origin = useOrigin();
 
     const title = initialData?'Edit Size':'Create Size';
     const desc = initialData?'Edit a size':'Create a new size';
