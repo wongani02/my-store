@@ -52,8 +52,6 @@ const ColorForm: FunctionComponent<ColorFormProps> = ({initialData}) => {
         }
     })
 
-
-
     const onSubmit = async(data: ColorFormSchemaType) =>{
         try {
             if(initialData){
@@ -92,8 +90,8 @@ const ColorForm: FunctionComponent<ColorFormProps> = ({initialData}) => {
             router.push(`/api/${params.store_Id}/colors`);
 
             toast({
-                title: toastMessage,
-                // description: 'Your Store has been deleted successfully',
+                title: 'Color Deleted',
+                description: 'Your color has been deleted successfully',
             });
 
         }catch(e){
