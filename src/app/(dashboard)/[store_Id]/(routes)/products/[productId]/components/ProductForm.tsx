@@ -1,6 +1,5 @@
 'use client'
 
-import ApiAlert from "@/components/app_components/Api-alert";
 import Heading from "@/components/app_components/Heading";
 import ImageUpload from "@/components/app_components/Image-Upload";
 import AlertModal from "@/components/app_components/modals/AlertModal";
@@ -15,7 +14,7 @@ import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Color, Product, Size, Image } from "@prisma/client";
 import axios from "axios";
-import { Flashlight, TrashIcon } from "lucide-react";
+import { TrashIcon } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { FunctionComponent, useState } from "react";
