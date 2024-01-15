@@ -1,3 +1,5 @@
+'use client'
+
 import { useOrigin } from "@/hooks/use-origin";
 import { useParams } from "next/navigation";
 import { FunctionComponent } from "react";
