@@ -179,7 +179,7 @@ const CategoryForm: FunctionComponent<CategoryFormProps> = ({initialData, billbo
                                             </FormControl>
                                             <SelectContent>
                                                 {billboards.map((item)=>(
-                                                    <SelectItem value={item.id}>{item.label}</SelectItem>
+                                                    <SelectItem key={item.id} value={item.id}>{item.label}</SelectItem>
                                                 ))}
                                             </SelectContent>
                                         </Select>
