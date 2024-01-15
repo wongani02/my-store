@@ -3,7 +3,7 @@
 import { useOrigin } from "@/hooks/use-origin";
 import { useParams } from "next/navigation";
 import { FunctionComponent } from "react";
-import ApiAlert from "./Api-alert";
+import ApiAlert from "../app_components/Api-alert";
 
 interface APIListProps {
     entityName: string

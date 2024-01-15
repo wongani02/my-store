@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import BillBoardClient from "./components/client";
 import prismadb from "@/lib/prismadb";
 import { CategoriesColumn } from "./components/columns";
 import { format } from "date-fns";

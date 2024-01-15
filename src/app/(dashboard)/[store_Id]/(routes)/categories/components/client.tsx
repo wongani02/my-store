@@ -8,7 +8,7 @@ import { useParams, useRouter } from "next/navigation";
 import { FunctionComponent } from "react";
 import { CategoriesColumn, columns } from "./columns";
 import { DataTable } from "@/components/app_components/data-table";
-import APIList from "@/components/app_components/api-list";
+import  APIList  from "@/components/ui/api-list";
 
 interface CategoryClientProps {
     data: CategoriesColumn[]
