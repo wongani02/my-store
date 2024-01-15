@@ -6,7 +6,6 @@ import Heading from "@/components/app_components/Heading";
 import Overview from "@/components/app_components/Overview";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import prismadb from "@/lib/prismadb";
 import { formatter } from "@/lib/utils";
 import { CreditCard, DollarSign, Package, ShoppingBag } from "lucide-react";
 import { FunctionComponent } from "react";
