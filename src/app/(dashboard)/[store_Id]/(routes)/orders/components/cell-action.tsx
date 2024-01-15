@@ -13,14 +13,13 @@ import {
   DropdownMenuLabel, 
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-
-import { BillboardColumn } from "./columns";
 import { toast } from "@/components/ui/use-toast";
 import AlertModal from "@/components/app_components/modals/AlertModal";
+import { OrderColumn } from "./columns";
 
 
 interface CellActionProps {
-  data: BillboardColumn;
+  data: OrderColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({
@@ -35,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({
     try {
       setLoading(true);
 
-      await axios.delete(`/api/${params.store_Id}/billboards/${data.id}`);
+      await axios.delete(`/api/${params.store_Id}/orders/${data.id}`);
 
       toast({
         title: 'Billboard deleted'
@@ -86,7 +85,7 @@ export const CellAction: React.FC<CellActionProps> = ({
             <Copy className="mr-2 h-4 w-4" /> Copy Id
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => router.push(`/${params.store_Id}/billboards/${data.id}`)}
+            onClick={() => router.push(`/${params.store_Id}/orders/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>
