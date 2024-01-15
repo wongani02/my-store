@@ -4,6 +4,7 @@ import { NavLinks } from "./NavLinks";
 import StoreSwtcher from "./StoreSwitcher";
 import { redirect } from "next/navigation";
 import prismadb from "@/lib/prismadb";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 interface NavbarProps {
     
@@ -32,6 +33,7 @@ const Navbar: FunctionComponent<NavbarProps> = async() => {
                 <NavLinks className="mx-6"/>
                 
                 <div className="ml-auto flex items-center space-x-4">
+                    <ThemeSwitcher/>
                     <UserButton afterSignOutUrl="/"/>
                 </div>
             </div>
