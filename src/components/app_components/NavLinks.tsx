@@ -3,9 +3,6 @@ import { cn } from "@/lib/utils"
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation"
 
- 
-
-
 export function NavLinks({
     className,
     ...props
